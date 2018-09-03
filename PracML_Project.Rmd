@@ -30,7 +30,7 @@ Thus, the Random Forest Model was selected for predicting on the Test Set.
 
 
 Importing Packages
-```{r Packages}
+```{r Packages, echo=FALSE}
 
 library(dplyr)
 library(stringr)
@@ -49,7 +49,7 @@ library(rattle)
 ```
 
 
-```{r Importing Data}
+```{r Importing Data ,echo=FALSE}
 
 training <- fread("C:/Users/33805/Desktop/Nihit/Coursera/Practical ML/pml-training.csv")
 
@@ -57,9 +57,8 @@ testing <- fread("C:/Users/33805/Desktop/Nihit/Coursera/Practical ML/pml-testing
 
 ```
 
-
-```{r Initial exploration of Dataset}
-
+Initial exploration of Dataset
+```{r Initial exploration of Dataset, echo=FALSE}
 str(training)
 
 #converting to dataframes
@@ -67,7 +66,7 @@ training <- as.data.frame(training)
 testing <- as.data.frame(testing)
 
 #observing distribution of output variable, classe
-table(training$classe)
+#table(training$classe)
 
 #separating out the classe column
 classe <- training["classe"]
@@ -83,10 +82,10 @@ training <- select(training, -(1:3))
 
 ```
 
+Dealing with Missing Values
+```{r Dealing with Missing Values for training set, echo=FALSE}
 
-```{r Dealing with Missing Values for training set}
-
-#removing compelte NA columns
+#removing complete NA columns
 fullna <- names(training[colSums(!is.na(training))==0])
 
 training <- select(training, -one_of(fullna))
@@ -101,16 +100,13 @@ nzvar <- nearZeroVar(training, names=TRUE)
 
 training <- select(training, -one_of(nzvar))
 
-#testing for any more missing values
-which(is.na(training))
-#no further missing values
 
 ```
 
 
-```{r Dealing with Missing Values for testing set}
+```{r Dealing with Missing Values for testing set, echo=FALSE}
 
-#removing compelte NA columns
+#removing complete NA columns
 fullna <- names(testing[colSums(!is.na(testing))==0])
 
 testing <- select(testing, -one_of(fullna))
@@ -125,14 +121,10 @@ nzvar <- nearZeroVar(testing, names=TRUE)
 
 testing <- select(testing, -one_of(nzvar))
 
-#testing for any more missing values
-which(is.na(testing))
-#no further missing values
-
 ```
 
-
-```{r Exploring Correlations in the Training Dataset}
+Correlation Plots
+```{r Exploring Correlations in the Training Dataset, echo=FALSE}
 
 correlation <- cor(training)
 
@@ -142,7 +134,7 @@ corrplot(correlation, order="hclust")
 training <- cbind(training, classe)
 ```
 
-
+Splitting into Training_New and Validation
 ```{r Splitting training further into training_new and validation datasets}
 
 set.seed(1243)
@@ -153,8 +145,8 @@ validation <- training[-intrain,]
 
 ```
 
-
-```{r CART Model}
+###CART MODEL
+```{r CART Model, echo=FALSE}
 
 #defining Cross Validation Parameters
 trainctr <- trainControl(method = "cv", number = 10)
@@ -163,64 +155,67 @@ trainctr <- trainControl(method = "cv", number = 10)
 cartmodel <- train(as.factor(classe)~.,training_new ,method="rpart", trControl = trainctr)
 
 #printing the CART model
-print(cartmodel$finalModel)
+#print(cartmodel$finalModel)
 fancyRpartPlot(cartmodel$finalModel)
 
 #predicting on the Validation Set
 predres_cart <- predict(cartmodel, validation)
 confmat_cart <- confusionMatrix(predres_cart,as.factor(validation$classe))
+confmat_cart
 
 #CART model has accuracy of 49.3%
 
 
 ```
 
-
-```{r Random Forest Model}
+###Random Forest Model
+```{r Random Forest Model, echo=FALSE}
 
 #defining Cross Validation Parameters
 trainctr <- trainControl(method = "cv", number = 10)
 
-#training CART model
+#training Random Forest model
 rfmodel <- train(as.factor(classe)~.,training_new ,method="rf", trControl = trainctr)
 
 print(rfmodel)
 print(rfmodel$finalModel)
-varImp(rfmodel)
+#varImp(rfmodel)
 
 predres_rf <- predict(rfmodel, validation)
 confmat_rf <- confusionMatrix(predres_rf,as.factor(validation$classe))
+confmat_rf
 
 #Random Forest Model has accuracy of 99.8%
 
 ```
 
-
-```{r Gradient Boosting Model}
+###Gradient Boosting Model
+```{r Gradient Boosting Model, echo=FALSE}
 
 #defining Cross Validation Parameters
 trainctr <- trainControl(method = "cv", number = 5)
 
-#training CART model
+#training Gradient Boosting model
 boostmodel <- train(as.factor(classe)~.,training_new ,method="gbm", trControl = trainctr, verbose = FALSE)
 
 print(boostmodel)
-print(boostmodel$finalModel)
 
 predres_boost <- predict(boostmodel, validation)
 confmat_boost <- confusionMatrix(predres_boost,as.factor(validation$classe))
+confmat_boost
 
 #Boosting Model has accuracy of 98.93%
 ```
 
-
-```{r Final Result}
+###Final Results
+```{r Final Result, echo=FALSE}
 
 #predicting on Test Set using the Random Forest Model
 predres_rf_test <- predict(rfmodel, testing)
 
 #generating the Final Result dataframe
 finalresult <- cbind(testing["problem_id"], predres_rf_test)
+finalresult
 
 ```
 
