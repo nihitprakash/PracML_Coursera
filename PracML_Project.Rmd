@@ -62,7 +62,7 @@ training <- as.data.frame(training)
 testing <- as.data.frame(testing)
 
 #observing distribution of output variable, classe
-#table(training$classe)
+table(training$classe)
 
 #separating out the classe column
 classe <- training["classe"]
