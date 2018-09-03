@@ -48,10 +48,10 @@ library(DMwR)
 library(corrplot)
 library(rattle)
 
-```
 
 
-```{r Importing Data}
+
+{r Importing Data}
 
 training <- fread("C:/Users/33805/Desktop/Nihit/Coursera/Practical ML/pml-training.csv")
 
