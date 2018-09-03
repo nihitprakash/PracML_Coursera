@@ -132,7 +132,6 @@ $(document).ready(function () {
 
 <div id="importing-packages" class="section level3">
 <h3> Importing Packages </h3>
-<p>Importing Packages</p>
 
 <p> The following packages were used in the project: dplyr, stringr, caret, data.table, knitr, e1071, DMwR, corrplot and rattle </p>
 
