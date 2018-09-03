@@ -131,6 +131,9 @@ $(document).ready(function () {
 <p>From further exploration of the dataset, it was seen that there were some columns unnecessary for our analysis like, names, the timestamp and v1 columns. These were removed. It was also straighaway observed that multiple predictors had NA’s. Therefore, full NA columns were removed, and then any columns which had &gt;95% missing values. NearZeroVariance predictors were also removed.</p>
 
 <p>Importing Packages</p>
+
+<p> The following packages were used in the project: dplyr, stringr, caret, data.table, knitr, e1071, DMwR, corrplot and rattle </p>
+
 <pre><code>## 
 ## Attaching package: 'dplyr'</code></pre>
 <pre><code>## The following objects are masked from 'package:stats':
