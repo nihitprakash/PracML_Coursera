@@ -283,7 +283,7 @@ validation &lt;- training[-intrain,]</code></pre>
 </div>
 <div id="gradient-boosting-model" class="section level3">
 <h3>Gradient Boosting Model</h3>
-<p>Our third model will be a <strong>Gradient Boosing Model</strong>. Here, we get an accuracy of <strong>98.93%</strong>. Pretty good, but our Random Forest Model still perfomed better.</p>
+<p>Our third model will be a <strong>Gradient Boosing Model</strong>. Here, we get an accuracy of <strong>98.78%</strong>. Pretty good, but our Random Forest Model still perfomed better.</p>
 <pre><code>## Stochastic Gradient Boosting 
 ## 
 ## 15699 samples
