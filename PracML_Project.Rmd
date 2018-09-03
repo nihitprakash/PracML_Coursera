@@ -1,5 +1,5 @@
 ---
-title: "Practical Maching Learning-Course Project"
+title: "Practical Machine Learning-Course Project"
 author: "Nihit Prakash"
 date: "09/02/2018"
 output: html_document
