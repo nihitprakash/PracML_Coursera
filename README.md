@@ -130,6 +130,7 @@ $(document).ready(function () {
 <p>The classe column(the output variable) was then separated from the training dataset.</p>
 <p>From further exploration of the dataset, it was seen that there were some columns unnecessary for our analysis like, names, the timestamp and v1 columns. These were removed. It was also straighaway observed that multiple predictors had NA’s. Therefore, full NA columns were removed, and then any columns which had &gt;95% missing values. NearZeroVariance predictors were also removed.</p>
 
+<h3> Importing Packages </h3>
 <p>Importing Packages</p>
 
 <p> The following packages were used in the project: dplyr, stringr, caret, data.table, knitr, e1071, DMwR, corrplot and rattle </p>
