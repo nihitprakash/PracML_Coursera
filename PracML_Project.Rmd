@@ -20,11 +20,11 @@ A corelation plot was built at this point to observe the correlations between ou
 
 Now, with our data munging complete, at this point we recombine the classe column with the training dataset. We then split out the training dataset into two sets: **training_new** and **validation** (80:20). We will use the training_new dataset for training our models, and the validation dataset to test our model to determine our out-of-sample accuracy. The model with the best accuracy here will be used to predict on the Test Dataset.  
 
-Our first model will be a single decision tree, the **CART Model**. We use 10 fold cross validation to avoid any overfitting. From predicting on our validation set, we get an out-of-sample accuracy on the Validation set of 49.3%
+Our first model will be a single decision tree, the **CART Model**. We use 10 fold cross validation to avoid any overfitting. From predicting on our validation set, we get an out-of-sample accuracy on the Validation set of **49.3%**
 
-Our second model will be a **Random Forest Model**. With the same 10 fold cross validation, we observe a significant increase in out-of-sample accuracy to 99.8%
+Our second model will be a **Random Forest Model**. With the same 10 fold cross validation, we observe a significant increase in out-of-sample accuracy to **99.8%**
 
-Our third model will be a **Gradient Boosing Model**. Here, we get an accuracy of 98.93%. Pretty good, but our Random Forest Model still perfomed better. 
+Our third model will be a **Gradient Boosing Model**. Here, we get an accuracy of **98.93%**. Pretty good, but our Random Forest Model still perfomed better. 
 
 Thus, the Random Forest Model was selected for predicting on the Test Set. 
 
