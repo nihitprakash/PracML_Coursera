@@ -352,7 +352,7 @@ validation &lt;- training[-intrain,]</code></pre>
 </div>
 <div id="final-results" class="section level3">
 <h3>Final Results</h3>
-<p>Thus, the Random Forest Model was selected for predicting on the Test Set. Based on the confusion matrix above, the estimated out-of-sample error rate is <stong>99.8% </strong>. </p>
+<p>Thus, the Random Forest Model was selected for predicting on the Test Set. Based on the confusion matrix above, the estimated out-of-sample error rate is <strong>99.8% </strong>. </p>
 <pre><code>##    problem_id predres_rf_test
 ## 1           1               B
 ## 2           2               A
