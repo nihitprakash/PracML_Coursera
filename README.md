@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 
@@ -126,7 +125,7 @@ $(document).ready(function () {
 </div>
 <div id="analysis-walk-through" class="section level2">
 <h2>Analysis Walk Through</h2>
-<p>The training and testing data was imported and converted to dataframe variables. The first point explored was the distribution of our output variable. The distribution seems a bit skewed towards “A”, but generally uniform. There is no strong class imbalance. As stated before, we have 5 different levels of outputs here: A through E. For multi-output classfication problems, tree based models will generally work well Hence, the analysis from this point on will be performed keeping that in mind.</p>
+<p>The training and testing data was imported and converted to dataframe variables. The first point explored was the distribution of our output variable. The distribution seems a bit skewed towards “A”, but generally uniform. There is no strong class imbalance. As stated before, we have 5 different levels of outputs here: A through E. For multi-output classfication problems, tree based models will generally work well. Hence, the analysis from this point on will be performed keeping that in mind.</p>
 <p>The classe column(the output variable) was then separated from the training dataset.</p>
 <p>From further exploration of the dataset, it was seen that there were some columns unnecessary for our analysis like, names, the timestamp and v1 columns. These were removed. It was also straighaway observed that multiple predictors had NA’s. Therefore, full NA columns were removed, and then any columns which had &gt;95% missing values. NearZeroVariance predictors were also removed.</p>
 
