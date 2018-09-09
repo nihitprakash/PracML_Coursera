@@ -12,7 +12,7 @@
 
 <meta name="date" content="2018-09-02" />
 
-<title>Practical Maching Learning-Course Project</title>
+<title>Exercise Prediction Model for the WLE Dataset</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
 <style type="text/css">code{white-space: pre;}</style>
@@ -112,7 +112,7 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Practical Maching Learning-Course Project</h1>
+<h1 class="title toc-ignore">Exercise Prediction Model for the WLE Dataset - Final Project for the Practical Maching Learning Course </h1>
 <h4 class="author"><em>Nihit Prakash</em></h4>
 <h4 class="date"><em>09/02/2018</em></h4>
 
