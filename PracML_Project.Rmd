@@ -6,28 +6,13 @@ output: html_document
 ---
 
 ##Background
-Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible to collect a large amount of data about personal activity relatively inexpensively. These type of devices are part of the quantified self movement - a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. One thing that people regularly do is quantify how much of a particular activity they do, but they rarely quantify how well they do it. In this project, your goal will be to use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants. They were asked to perform barbell lifts correctly and incorrectly in 5 different ways
+Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible to collect a large amount of data about personal activity relatively inexpensively. These type of devices are part of the quantified self movement - a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. One thing that people regularly do is quantify how much of a particular activity they do, but they rarely quantify how well they do it. 
+
+In this project, the goal is to use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants. They were asked to perform one set of 10 repetitions of the Unilateral Dumbbell Biceps Curl correctly and incorrectly in 5 different ways: exactly according to the specification (Class A), throwing the elbows to the front (Class B), lifting the dumbbell only halfway (Class C), lowering the dumbbell only halfway (Class D) and throwing the hips to the front (Class E).
+
+Read more: http://groupware.les.inf.puc-rio.br/har#weight_lifting_exercises#ixzz5RrtOBd19
 
 ##Analysis Walk Through
-The training and testing data was imported and converted to dataframe variables.
-The first point explored was the distribution of our output variable. The distribution seems a bit skewed towards "A", but generally uniform. There is no strong class imbalance. As stated before, we have 5 different levels of outputs here: A through E. For multi-output classfication problems, tree based models will generally work well Hence, the analysis from this point on will be performed keeping that in mind. 
-
-The classe column(the output variable) was then separated from the training dataset.
-
-From further exploration of the dataset, it was seen that there were some columns unnecessary for our analysis like, names, the timestamp and v1 columns. These were removed. It was also straighaway observed that multiple predictors had NA's. Therefore, full NA columns were removed, and then any columns which had >95% missing values. NearZeroVariance predictors were also removed.
-
-A corelation plot was built at this point to observe the correlations between our predictors. There were some predictors that were highly correlated with each other (postively and negatively). Principal Component Analysis could be performed at this point, to remove correlations and reduce number of predictors. However, since we have decided to use Tree-based models anyway, we don't need to perform this step, since Tree-based models usually take care of collinearity. 
-
-Now, with our data munging complete, at this point we recombine the classe column with the training dataset. We then split out the training dataset into two sets: **training_new** and **validation** (80:20). We will use the training_new dataset for training our models, and the validation dataset to test our model to determine our out-of-sample accuracy. The model with the best accuracy here will be used to predict on the Test Dataset.  
-
-Our first model will be a single decision tree, the **CART Model**. We use 10 fold cross validation to avoid any overfitting. From predicting on our validation set, we get an out-of-sample accuracy on the Validation set of **49.3%**
-
-Our second model will be a **Random Forest Model**. With the same 10 fold cross validation, we observe a significant increase in out-of-sample accuracy to **99.8%**
-
-Our third model will be a **Gradient Boosing Model**. Here, we get an accuracy of **98.93%**. Pretty good, but our Random Forest Model still perfomed better. 
-
-Thus, the Random Forest Model was selected for predicting on the Test Set. 
-
 
 Importing Packages
 ```{r Packages, echo=FALSE}
@@ -41,31 +26,39 @@ library(e1071)
 library(DMwR)
 library(corrplot)
 library(rattle)
+library(VIM)
+library(Amelia)
+library(reshape2)
 
 ```
 
+###Initial exploration of Dataset
+The training and testing data was imported and converted to dataframe variables.
+As stated before, we have 5 different levels of outputs here: A through E. For multi-output classfication problems, tree based models will generally work well Hence, the analysis from this point on will be performed keeping that in mind. 
+
+The classe column(the output variable) was then separated from the training dataset.
+
+From further exploration of the dataset, it was seen that there were some columns unnecessary for our analysis like, names, the timestamp and v1 columns. These were removed.
 
 ```{r Importing Data ,echo=FALSE}
 
-training <- fread("C:/Users/33805/Desktop/Nihit/Coursera/Practical ML/pml-training.csv")
+training <- fread("C:/Users/33805/Desktop/My Documents/Learning/Coursera or Kaggle/Practical ML/pml-training.csv")
 
-testing <- fread("C:/Users/33805/Desktop/Nihit/Coursera/Practical ML/pml-testing.csv")
+testing <- fread("C:/Users/33805/Desktop/My Documents/Learning/Coursera or Kaggle/Practical ML/pml-testing.csv")
 
 ```
 
-Initial exploration of Dataset
+
 ```{r Initial exploration of Dataset, echo=FALSE}
-str(training)
+head(str(training))
 
 #converting to dataframes
 training <- as.data.frame(training)
 testing <- as.data.frame(testing)
 
-#observing distribution of output variable, classe
-table(training$classe)
-
 #separating out the classe column
 classe <- training["classe"]
+user_name <- training["user_name"]
 training <- select(training, -classe)
 
 #removing non-numeric columns
@@ -74,11 +67,20 @@ training <- select_if(training, is.numeric)
 #further removing non essential columns (like v1, timestamp etc.)
 training <- select(training, -(1:3))
 
+#replacing blank values with NA's
+training[training==""] <- NA
+```
 
+It was also straighaway observed that multiple predictors were either fully NA's or had more than 90% NA's . 
+
+```{r Plotting Missing Values, echo=FALSE}
+
+aggr(training)
 
 ```
 
-Dealing with Missing Values
+Therefore, full NA columns were removed, and then any columns which had >95% missing values. NearZeroVariance predictors were also removed. 
+
 ```{r Dealing with Missing Values for training set, echo=FALSE}
 
 #removing complete NA columns
@@ -97,8 +99,12 @@ nzvar <- nearZeroVar(training, names=TRUE)
 training <- select(training, -one_of(nzvar))
 
 
+#checking to see if there are any NA's
+aggr(training)
+
 ```
 
+As can be oserved above, there are no missing values in the dataset now
 
 ```{r Dealing with Missing Values for testing set, echo=FALSE}
 
@@ -119,18 +125,63 @@ testing <- select(testing, -one_of(nzvar))
 
 ```
 
-Correlation Plots
-```{r Exploring Correlations in the Training Dataset, echo=FALSE}
+###Visual Exploration
 
-correlation <- cor(training)
+A corelation plot was built at this point to observe the correlations between our predictors. There were some predictors that were highly correlated with each other (postively and negatively). Principal Component Analysis could be performed at this point, to remove correlations and reduce number of predictors. However, since we have decided to use Tree-based models anyway, we don't need to perform this step, since Tree-based models usually take care of collinearity. 
 
-corrplot(correlation, order="hclust")
-
+```{r Correlation Plot, echo=FALSE}
 #joining the classe column back to the training set
 training <- cbind(training, classe)
+
+#creating a dataset for plotting
+training_plot <- cbind(training, user_name)
+
+#plotting Correlation Plot
+correlation <- cor(select(training, -classe))
+
+corrplot(correlation, order="hclust", type="upper", diag = FALSE, tl.pos = "td", tl.cex = 0.5)
+
+#names(training)
+
 ```
 
-Splitting into Training_New and Validation
+The first plot explored was the distribution of our output variable. The distribution seems a bit skewed towards "A", but generally uniform. There is no strong class imbalance.
+
+
+```{r Class distribution plot, echo=FALSE}
+
+#proportion of each class
+ggplot(training_plot, aes(classe)) + geom_bar()
+
+
+```
+
+There was no special pattern observed when plotting between variables. The plot below was one of several exploratory plots, with no clear pattern. 
+
+```{r random exploratory plot, echo=FALSE}
+#exploratory plot
+ggplot(training_plot, aes(total_accel_forearm, total_accel_belt, color=classe)) +geom_point()
+
+```
+
+The dataset was the melted into the long format, and the variables were plotted to observe the distribution of values
+
+```{r}
+#melting the dataset
+training_melt <- melt(select(training_plot, -c("user_name")), id.vars = "classe")
+
+#plotting molten dataset to observe data distribution of each predictor
+ggplot(training_melt, aes(variable,value), color=classe) +geom_boxplot() +coord_flip()
+
+
+```
+
+The distribution seems fairly uniform around 0, with just one distant outlier. 
+
+
+Now, with our data munging complete, at this point we recombine the classe column with the training dataset. We then split out the training dataset into two sets: **training_new** and **validation** (80:20). We will use the training_new dataset for training our models, and the validation dataset to test our model to determine our out-of-sample accuracy. The model with the best accuracy here will be used to predict on the Test Dataset.  
+
+###Splitting into Training_New and Validation
 ```{r Splitting training further into training_new and validation datasets}
 
 set.seed(1243)
@@ -142,6 +193,8 @@ validation <- training[-intrain,]
 ```
 
 ###CART MODEL
+Our first model will be a single decision tree, the **CART Model**. We use 10 fold cross validation to avoid any overfitting. From predicting on our validation set, we get an out-of-sample accuracy on the Validation set of **49.3%**
+
 ```{r CART Model, echo=FALSE}
 
 #defining Cross Validation Parameters
@@ -164,7 +217,10 @@ confmat_cart
 
 ```
 
+
 ###Random Forest Model
+Our second model will be a **Random Forest Model**. With the same 10 fold cross validation, we observe a significant increase in out-of-sample accuracy to **99.8%**
+
 ```{r Random Forest Model, echo=FALSE}
 
 #defining Cross Validation Parameters
@@ -186,6 +242,8 @@ confmat_rf
 ```
 
 ###Gradient Boosting Model
+Our third model will be a **Gradient Boosing Model**. Here, we get an accuracy of **98.93%**. Pretty good, but our Random Forest Model still perfomed better. 
+
 ```{r Gradient Boosting Model, echo=FALSE}
 
 #defining Cross Validation Parameters
@@ -204,6 +262,8 @@ confmat_boost
 ```
 
 ###Final Results
+Thus, with an out-of-sample accruacy of **99.8**, the Random Forest Model was selected for predicting on the Test Set. 
+
 ```{r Final Result, echo=FALSE}
 
 #predicting on Test Set using the Random Forest Model
