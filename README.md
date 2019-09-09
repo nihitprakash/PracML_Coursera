@@ -1,7 +1,7 @@
 <h1> Do you have the right form? - Predicting Excercise Correctness with the WLE Dataset </h1> 
 <div id="background" class="section level2">
 <h2>Background</h2>
-<p>Using devices such as Fitbit, Nike FuelBand, and Jawbone Up it is now possible to collect a large amount of data about personal activity relatively inexpensively. These type of devices are part of the quantified self movement - a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. One thing that people regularly do is quantify how much of a particular activity they do, but they rarely quantify how <b><i>well</i></b> they do it.</p>
+<p>Using devices such as Fitbit, Nike FuelBand, and Jawbone Up it is now possible to collect a large amount of data about personal activity relatively inexpensively. These type of devices are part of the quantified self movement - a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. One thing that people regularly do is quantify how much of a particular activity they do, but they rarely quantify how <b><i>well</i></b> they do it. If we are able to build a model predicting if they are doing an activity correctly or not, it might be very useful to prevent bad form (or worse, injury).</p>
 <p>In this project, the goal is to use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants to predict if they are doing the exercise correctly or incorrectly. If they do it incorrectly, we also want to predict the manner of incorrectness. They were asked to perform one set of 10 repetitions of the Unilateral Dumbbell Biceps Curl correctly and incorrectly in 5 different ways: exactly according to the specification (Class A), throwing the elbows to the front (Class B), lifting the dumbbell only halfway (Class C), lowering the dumbbell only halfway (Class D) and throwing the hips to the front (Class E).</p>
 <p>Read more: <a href="http://groupware.les.inf.puc-rio.br/har#weight_lifting_exercises#ixzz5RrtOBd19" class="uri">http://groupware.les.inf.puc-rio.br/har#weight_lifting_exercises#ixzz5RrtOBd19</a></p>
 </div>
@@ -325,7 +325,7 @@ validation &lt;- training[-intrain,]</code></pre>
 </div>
 <div id="final-results" class="section level3">
 <h3>Final Results</h3>
-<p>Thus, the Random Forest Model was selected for predicting on the Test Set. Based on the confusion matrix above, the estimated out-of-sample error rate is <strong>99.8% </strong>. </p>
+<p>The Random Forest Model gave the best predictions on the Validation set and was therefore selected for predicting on the Test Set. Based on the confusion matrix above, the estimated out-of-sample error rate is <strong>99.8% </strong>. </p>
 <pre><code>##    problem_id predres_rf_test
 ## 1           1               B
 ## 2           2               A
@@ -347,6 +347,8 @@ validation &lt;- training[-intrain,]</code></pre>
 ## 18         18               B
 ## 19         19               B
 ## 20         20               B</code></pre>
+<p> One (of many) potential use for such a model is: using real-time data from trackers, the model will be able to predict and display whether a person is carrying out an exercide in the correct form, or if it is incorrect, what exactly the person is doing wrong. This can be extremely helpful while carrying out an exercise, especially for beginners. <\p> 
+
 </div>
 </div>
 
