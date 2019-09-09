@@ -347,7 +347,7 @@ validation &lt;- training[-intrain,]</code></pre>
 ## 18         18               B
 ## 19         19               B
 ## 20         20               B</code></pre>
-<p> One (of many) potential use for such a model is: using real-time data from trackers, the model will be able to predict and display whether a person is carrying out an exercide in the correct form, or if it is incorrect, what exactly the person is doing wrong. This can be extremely helpful while carrying out an exercise, especially for beginners. <\p> 
+<p> One (of many) potential use for such a model is: using real-time data from trackers, the model will be able to predict and display whether a person is carrying out an exercide in the correct form, or if it is incorrect, what exactly the person is doing wrong. This can be extremely helpful while carrying out an exercise, especially for beginners. </p> 
 
 </div>
 </div>
